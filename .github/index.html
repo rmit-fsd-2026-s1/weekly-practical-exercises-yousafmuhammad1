@@ -1,13 +1,171 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pure JS Auth Demo (Front-end only)</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 32px; max-width: 520px; margin: 0 auto; }
+    .card { border: 1px solid #ddd; border-radius: 10px; padding: 18px; margin-top: 16px; }
+    label { display:block; margin-top: 10px; font-size: 14px; }
+    input { width: 100%; padding: 10px; margin-top: 6px; box-sizing: border-box; }
+    button { padding: 10px 14px; margin-top: 14px; cursor: pointer; }
+    .row { display:flex; gap: 10px; flex-wrap: wrap; }
+    .muted { color:#666; font-size: 13px; }
+    .error { color:#b00020; margin-top: 10px; }
+    .ok { color:#0b7a0b; margin-top: 10px; }
+    code { background:#f6f6f6; padding:2px 6px; border-radius:6px; }
+  </style>
 </head>
 <body>
-    <h1>GitHub Pages</h1>
-    <p>This is a placeholder page for GitHub Pages. You can customize this page by </p>
-    
+
+  <h2>Pure JavaScript Authentication (Front-end only)</h2>
+  <p class="muted">
+    Demo login uses a <b>hardcoded</b> user and stores a fake token in <code>localStorage</code>.
+    <br/>Username: <code>admin</code> | Password: <code>1234</code>
+  </p>
+
+  <!-- Login view -->
+  <div id="loginView" class="card" style="display:none;">
+    <h3>Login</h3>
+    <label>Username</label>
+    <input id="username" placeholder="e.g. admin" autocomplete="username" />
+
+    <label>Password</label>
+    <input id="password" type="password" placeholder="e.g. 1234" autocomplete="current-password" />
+
+    <div class="row">
+      <button id="loginBtn">Login</button>
+      <button id="clearBtn" type="button">Clear</button>
+    </div>
+
+    <div id="loginMsg" class="error" aria-live="polite"></div>
+  </div>
+
+  <!-- Protected view -->
+  <div id="appView" class="card" style="display:none;">
+    <h3>Dashboard (Protected)</h3>
+    <p>✅ You are logged in.</p>
+
+    <p class="muted">
+      Token stored in localStorage as <code>auth_token</code>.
+    </p>
+
+    <div class="row">
+      <button id="whoamiBtn">Show Session Info</button>
+      <button id="logoutBtn">Logout</button>
+    </div>
+
+    <div id="appMsg" class="ok" aria-live="polite"></div>
+  </div>
+
+<script>
+/**
+ * FRONT-END ONLY AUTH DEMO
+ * - Hardcoded credentials
+ * - Fake token + expiry stored in localStorage
+ * - Simple route guard (show/hide views)
+ */
+
+// ---- Config ----
+const DEMO_USER = { username: "admin", password: "1234", role: "admin" };
+const TOKEN_KEY = "auth_token";
+const EXP_KEY = "auth_exp";
+const USER_KEY = "auth_user";
+
+// ---- Helpers ----
+function nowMs() { return Date.now(); }
+
+function isLoggedIn() {
+  const token = localStorage.getItem(TOKEN_KEY);
+  const exp = Number(localStorage.getItem(EXP_KEY) || "0");
+  return Boolean(token) && exp > nowMs();
+}
+
+function setSession(userObj) {
+  // "token" is just a random string for demo (NOT real JWT)
+  const token = "demo_" + Math.random().toString(36).slice(2) + "_" + nowMs();
+  const expiresInMs = 30 * 60 * 1000; // 30 minutes
+  const exp = nowMs() + expiresInMs;
+
+  localStorage.setItem(TOKEN_KEY, token);
+  localStorage.setItem(EXP_KEY, String(exp));
+  localStorage.setItem(USER_KEY, JSON.stringify({
+    username: userObj.username,
+    role: userObj.role
+  }));
+}
+
+function clearSession() {
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(EXP_KEY);
+  localStorage.removeItem(USER_KEY);
+}
+
+function show(viewId) {
+  document.getElementById("loginView").style.display = (viewId === "loginView") ? "block" : "none";
+  document.getElementById("appView").style.display   = (viewId === "appView")   ? "block" : "none";
+}
+
+// ---- UI logic ----
+function render() {
+  if (isLoggedIn()) {
+    show("appView");
+  } else {
+    // expired? clear
+    clearSession();
+    show("loginView");
+  }
+}
+
+document.getElementById("loginBtn").addEventListener("click", () => {
+  const u = document.getElementById("username").value.trim();
+  const p = document.getElementById("password").value;
+
+  const msg = document.getElementById("loginMsg");
+  msg.textContent = "";
+
+  if (!u || !p) {
+    msg.textContent = "Please enter username and password.";
+    return;
+  }
+
+  // Demo credential check (front-end only)
+  if (u === DEMO_USER.username && p === DEMO_USER.password) {
+    setSession(DEMO_USER);
+    document.getElementById("password").value = "";
+    render();
+  } else {
+    msg.textContent = "Invalid credentials (try admin / 1234).";
+  }
+});
+
+document.getElementById("clearBtn").addEventListener("click", () => {
+  document.getElementById("username").value = "";
+  document.getElementById("password").value = "";
+  document.getElementById("loginMsg").textContent = "";
+});
+
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  clearSession();
+  document.getElementById("appMsg").textContent = "";
+  render();
+});
+
+document.getElementById("whoamiBtn").addEventListener("click", () => {
+  const appMsg = document.getElementById("appMsg");
+  const token = localStorage.getItem(TOKEN_KEY);
+  const exp = Number(localStorage.getItem(EXP_KEY) || "0");
+  const user = JSON.parse(localStorage.getItem(USER_KEY) || "{}");
+
+  const minsLeft = Math.max(0, Math.round((exp - nowMs()) / 60000));
+  appMsg.textContent =
+    `Logged in as ${user.username || "?"} (${user.role || "?"}). Token: ${token}. Expires in ~${minsLeft} min.`;
+});
+
+// Initial render on page load
+render();
+</script>
+
 </body>
 </html>
