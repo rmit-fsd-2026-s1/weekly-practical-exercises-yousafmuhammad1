@@ -1,0 +1,53 @@
+Phase,US Number,Epic Theme,User Story,"Acceptance Criteria
+",Value
+A1,V1,Venue,"As a hirer I want to view list of venues, so that I can see the range of venues available for hire","1.Given the hirer is on the venue browsing page, When the page loads, Then a list of venues available for hire is displayed.
+2. Given venues are available, When the hirer views the list, Then each venue shows its name, location, capacity, price, image, and short description.
+3. Given no venues are available, When the hirer opens the venue browsing page, Then the system displays a “No venues available” message.",High
+A1,V2,Venue,"As a hirer I want to search a venue based on location, so that I can see a venue that is suitable for me","The hirer can select / search a location in the location filter and see a list of matching venues. The hirer sees a ""No venues found"" message when no venues exist for the entered location, or be notified for an invalid location that does not exist within the set list of venues (if manual typing is allowed)",Medium
+A1,V3,Venue,"As a hirer I want to select my preffered venues and rank them, so that I can come back later and apply them","1. Given the hirer is viewing available venues, When the hirer selects a venue, Then the venue is added to their preferred venue list.
+2. Given the hirer is viewing their preferred venue list, When the hirer assigns or updates their ranking, Then the system saves and displays the venues in the chosen order.
+3. Given the hirer has saved preferred venues, When the hirer returns later, Then the system displays the previously saved venues and their rankings.
+4. Given the hirer has a saved preferred venue list, When the hirer chooses a venue to apply for,Then the system allows the hirer to continue to the application process.
+5. Given the hirer has not selected any venues, When the hirer opens the preferred venue list, Then the system shows a message that no preferred venues have been saved.",Low
+A1,V4,Venue,"As a hirer I want to submit an application to my selected venue, so that I can get a reply from the vendor","1. Given the hirer has selected a venue, When the hirer opens the application page, Then the system displays an application form for that venue.
+2. Given the hirer is completing the application form, When the hirer leaves a required field empty, Then the system prevents submission and displays a validation message.
+3. Given the hirer has completed all required application details, When the hirer submits the application, Then the system saves the application and displays a submission confirmation.
+4. Given the hirer has submitted an application, When the hirer views their dashboard later, Then the submitted application and its status are displayed.
+",High
+A1,UM1,User Management,"As a hirer I want to register my name, email and password, so that I can log in to the web app","1. The system shall display a register form, with first name, lastname, email, password and confirm password fields. 
+2. Passwords should be hidden when typing
+3. Email format should be validated
+4. Confirm password and password must be the same
+5. Password must be a strong password
+6. Upon clicking the form submission (or pressing enter) I should then be able to navigate to (or be taken to) the login page where it accepts the registered email and password ",
+A1,UM2,User Management,"As a hirer I want to log in using email and password, so that I can use the web app",The user can log in with matching email and password. The user gets rejected when logging in with mismatch / incorrect email and password.,
+A1,UM3,User Management,"As a hirer I want to update my profile with compliant documents such as driver's license and public liability insurance as a textual information, so that my credibility improves","1. The system displays file inputs for documents
+2. This could be a dedicated ""License"" field, or a generic file upload with a type in a drop down/radio/text.
+3. The system should allow the file to be uploaded and then downloaded again",
+A1,UM4,User Management,"As a hirer I want to log out, so that I can close the app securely.","When the hirer clicks ""Log Out"" they successfully signed out, notified ACK (You've been successfully logged out, or Thank you within the visual space of the user (centre maybe or be color coded) and redirected back to the login page automatically. The log out button should be present in the nav bar or through the drop down in profile, but should be accessible.  After logging out, the hirer cannot access protected pages and is redirected to the login page if they attempt to navigate back using the browser and navigation bar should not have a profile option anymore. ",
+A1,UM5,User Management,As a hirer I want to view my hiring reputation based on the historical list of previous bookings,Initial Previous bookings sample data to be hardcorded. New succesfull booking will be listed here as well.,
+A1,UM6,User Management,"As a hirer I want to update my profile with compliant documents such as driver's license and public liability insurance as an uploaded file, so that my credibility improves","Max 2 MB for each picture, file type validation
+IndexDB is allowed for storing pdf. Converting to base64 is also allowed. All other files should use localStorage",
+,UM7,User Management,"As both the hirer and vendor I want to see a hirer's credibility score based on the actual document submitted, so that I know my score which indicates the hirer's application chance of success",,
+A1,B1,Booking,"As a hirer I want to make a booking by submitting application, so I can secure the venue for my event","1. When the hirer is on the application page, the hirer shall be able to enter the required application information, such as:
+Event name
+Number of attendees
+Event date
+Event time
+Event duration
+Event type
+Additional notes or requirements",
+A1,B2,Booking,"As a vendor I want to view list of applications, so I can select the suitable hirer","1. The vendor can see all applications in a list or similar display
+2. The vendor can review details of the applications in some manner
+3. The vendor can select an application to accept or deny",
+A1,B3,Booking,"As a vendor I want to view hirer's historical hire list, so I can judge their credibility and make decision about their application",,
+A1,B4,Booking,"As a vendor I want to view hirer's compliant documents, so I can judge their credibility and make decision about their application",,
+A1,B5,Booking,"As a vendor I want reject an application, so that I can find a better / more suitable hirer","1. The vendor can select an application and mark it as “rejected,” and the system updates its status accordingly.
+2. Once rejected, the applicant is notified (if applicable), and the venue remains available for other applications.",High
+A1,B6,Booking,"As a vendor I want to accept an application for a venue at particular date and time, so I begin hiring transaction process","1. The vendor can select and accept a specific application for a chosen date and time, and the system updates its status to “accepted.”
+2. Once accepted, the selected time slot is no longer available for other applicants and the hiring process is initiated.",High
+A1,B7,Booking,"As a vendor I want to block a venue availability period, so that no one can book it at that particular time period","1. The vendor can select a date and time range to block, and the system prevents any bookings within that period.
+2. The blocked period is clearly reflected in the availability calendar and cannot be overridden by users.",High
+A1,RD1,Report and dashboard,"As a vendor I want to see an infograph that shows the name of most chosen applicant, least chosen applicant, and failed applicants, so that I can better understand about my venues potential hirers","1. The dashboard displays an infographic showing the most chosen applicant, least chosen applicant, and failed applicants based on current data.
+2. The information displayed is accurate and reflects the latest application results.",High
+A2,V5,Venue,As a vendor I want to list my venue so that it is visible to me and hirers,"Venue is entered, saved, and listed",Not required until A2
